@@ -4,10 +4,14 @@ import 'package:lunch_up/components/assets/app_assets.dart';
 import 'package:lunch_up/components/assets/app_colors.dart';
 import 'package:lunch_up/components/widgets/app_button.dart';
 import 'package:lunch_up/components/widgets/app_text.dart';
+import 'package:lunch_up/controllers/dashboard_controller.dart';
 import 'package:lunch_up/views/stations_view.dart';
 
 class DashboardView extends StatelessWidget {
-  const DashboardView({super.key});
+  DashboardView({super.key});
+
+  final textController = TextEditingController();
+  final dashboardController = Get.put(DashboardController());
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +27,7 @@ class DashboardView extends StatelessWidget {
             backgroundColor: Colors.transparent,
           ),
           body: Padding(
-            padding: const EdgeInsets.fromLTRB(0, 90, 0, 0),
+            padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
             child: Column(
               children: [
                 Row(
@@ -38,17 +42,18 @@ class DashboardView extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 100,),
+                const SizedBox(height: 90,),
                 Column(
                   children: [
                     Material(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(30),
-                      child: const SizedBox(
+                      child: SizedBox(
                         width: 334,
                         height: 45,
                         child: TextField(
-                          decoration: InputDecoration(
+                          controller: textController,
+                          decoration: const InputDecoration(
                             prefixIcon: Icon(Icons.search),
                             labelText: "Enter your location",
                           ),
@@ -59,13 +64,18 @@ class DashboardView extends StatelessWidget {
                     Material(
                       color: AppColors.primaryColor,
                       borderRadius: BorderRadius.circular(30),
-                      child: AppButton(
+                      child: Obx(() => AppButton(
                         width: 334,
                         height: 45,
                         onPressed: (){
-                          Get.to(const StationsView());
+                          dashboardController.location.value = textController.text;
+                          dashboardController.getStations(textController.text);
+                          Get.to(
+                            StationsView()
+                          );
                         },
-                        child: AppText("Order Now", color: AppColors.primaryText, fontWeight: FontWeight.w400, size: 18,)))
+                        child: AppText(dashboardController.buttonText.value, color: AppColors.primaryText, fontWeight: FontWeight.w400, size: 18,)))
+                      ) 
                   ],
                )
               ],
