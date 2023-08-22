@@ -51,7 +51,7 @@ class MealView extends StatelessWidget {
                             Row(
                               children: [
                                 Image.asset(AppAsset.calories),
-                                AppText("201 cal", size: 13, fontWeight: FontWeight.w400,)
+                                const AppText("201 cal", size: 13, fontWeight: FontWeight.w400,)
                               ],
                             ),
                             AppText('₦${mealController.meals[index].amount}')

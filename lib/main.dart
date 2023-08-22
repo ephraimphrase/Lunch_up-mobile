@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lunch_up/views/dashboard_view.dart';
+import 'package:lunch_up/views/register_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: DashboardView(),
+      home: RegisterView(),
     );
   }
 }

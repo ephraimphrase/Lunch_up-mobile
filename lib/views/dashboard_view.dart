@@ -55,7 +55,7 @@ class DashboardView extends StatelessWidget {
                           controller: textController,
                           decoration: const InputDecoration(
                             prefixIcon: Icon(Icons.search),
-                            labelText: "Enter your location",
+                            hintText: "Enter your location",
                           ),
                         ),
                       ),
