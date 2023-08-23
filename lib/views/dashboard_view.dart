@@ -25,6 +25,7 @@ class DashboardView extends StatelessWidget {
           appBar: AppBar(
             elevation: 0,
             backgroundColor: Colors.transparent,
+            leading: null,
           ),
           body: Padding(
             padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),

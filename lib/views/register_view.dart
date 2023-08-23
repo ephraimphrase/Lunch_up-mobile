@@ -5,6 +5,7 @@ import 'package:lunch_up/components/widgets/app_button.dart';
 import 'package:lunch_up/components/widgets/app_text.dart';
 import 'package:lunch_up/controllers/user_controller.dart';
 import 'package:lunch_up/views/dashboard_view.dart';
+import 'package:lunch_up/views/login_view.dart';
 
 class RegisterView extends StatelessWidget {
   RegisterView({super.key});
@@ -36,6 +37,7 @@ class RegisterView extends StatelessWidget {
                         height: 51,
                         width: 360,
                         child: TextField(
+                          keyboardType: TextInputType.text,
                           controller: firstNameController,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(
@@ -55,6 +57,7 @@ class RegisterView extends StatelessWidget {
                         height: 51,
                         width: 360,
                         child: TextField(
+                          keyboardType: TextInputType.text,
                           controller: lastNameController,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(
@@ -74,13 +77,14 @@ class RegisterView extends StatelessWidget {
                         height: 51,
                         width: 360,
                         child: TextField(
+                          keyboardType: TextInputType.emailAddress,
                           controller: emailController,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.black, width: 1),
                               borderRadius: BorderRadius.all(Radius.circular(20))
                             ),
-                            prefixIcon: Icon(Icons.account_circle_outlined),
+                            prefixIcon: Icon(Icons.email_outlined),
                             hintText: "Email"
                           ),
                         )
@@ -93,6 +97,7 @@ class RegisterView extends StatelessWidget {
                         height: 51,
                         width: 360,
                         child: TextField(
+                          keyboardType: TextInputType.name,
                           controller: userNameController,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(
@@ -112,13 +117,16 @@ class RegisterView extends StatelessWidget {
                         height: 51,
                         width: 360,
                         child: TextField(
+                          obscureText: true,
+                          enableSuggestions: false,
+                          autocorrect: false,
                           controller: passWordController,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.black, width: 1),
                               borderRadius: BorderRadius.all(Radius.circular(20))
                             ),
-                            prefixIcon: Icon(Icons.account_circle_outlined),
+                            prefixIcon: Icon(Icons.lock_outline),
                             hintText: "Password"
                           ),
                         )
@@ -153,6 +161,25 @@ class RegisterView extends StatelessWidget {
                         ),) 
                       ),
                     ),
+                    const SizedBox(height: 20,),
+                    GestureDetector(
+                      onTap: () => Get.to(const LoginView()),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: RichText(
+                          text: TextSpan(
+                            text: "Already have an account? ",
+                            style: const TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w500),
+                            children: [
+                              TextSpan(
+                                text: "Log in",
+                                style: TextStyle(color: AppColors.primaryColor, fontSize: 18, fontWeight: FontWeight.w400)
+                              )
+                            ]
+                          )
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ],

@@ -30,17 +30,12 @@ class UserController extends GetxController {
 
       accessToken = responseData['token'];
       refreshToken = responseData['refresh'];
-      user.value = userFromJson(response.body[2]);
 
-      isAuthenticated.value = true;
+      user.value = User.fromJson(responseData['user']);
 
       update();
 
       await FlutterSessionJwt.saveToken(accessToken);
-
-      var token = await FlutterSessionJwt.getPayload();
-      print(token);
-      print(user.value);
 
     } else {
       print(response.body);
@@ -50,5 +45,44 @@ class UserController extends GetxController {
     }
   }
 
-  void loginUser() async {}
+  void loginUser() async {
+    var userData = userToJson(user.value);
+
+    final response = await http.post(
+      Uri.parse("${baseUrl}api/accounts/login/"),
+      headers: {'content-type': 'application/json'},
+      body: userData
+    );
+
+    if (response.statusCode == 200) {
+      var responseData = jsonDecode(response.body);
+
+      accessToken = responseData['access'];
+      refreshToken = responseData['refresh'];
+
+      await FlutterSessionJwt.saveToken(accessToken);
+    }
+  }
+
+  void getUserDetails(username) async {
+
+    var exp = await FlutterSessionJwt.isTokenExpired();
+
+    if (exp == true) {
+      
+    }
+
+    final response  = await http.get(
+      Uri.parse("${baseUrl}api/accounts/users/$username/"),
+      headers: {
+        'content-type': 'application/json',
+        'Authorization': accessToken,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      user.value = userFromJson(response.body);
+      update();
+    }
+  }
 }
