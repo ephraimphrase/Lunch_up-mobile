@@ -4,16 +4,15 @@ import 'package:get/get.dart';
 import 'package:lunch_up/models/user_model.dart';
 import 'package:http/http.dart' as http;
 
-
-
 class UserController extends GetxController {
   var user = User(username: "", password: "", email: "", firstName: "", lastName: "").obs;
   var baseUrl = 'http://10.0.2.2:8000/';
-  var accessToken = '';
+  var accessToken = ''.obs;
   var refreshToken = '';
   var error = ''.obs;
   var isAuthenticated = false.obs;
   var signUp = 'Sign Up'.obs;
+  var signIn = 'Sign In'.obs;
 
   void registerUser() async {
     
@@ -28,17 +27,16 @@ class UserController extends GetxController {
     if (response.statusCode == 201) {
       var responseData = jsonDecode(response.body);
 
-      accessToken = responseData['token'];
+      accessToken.value = responseData['token'];
       refreshToken = responseData['refresh'];
 
       user.value = User.fromJson(responseData['user']);
 
       update();
 
-      await FlutterSessionJwt.saveToken(accessToken);
+      await FlutterSessionJwt.saveToken(accessToken.value);
 
     } else {
-      print(response.body);
 
       // error.value = responseData['error'];
       update();
@@ -57,26 +55,50 @@ class UserController extends GetxController {
     if (response.statusCode == 200) {
       var responseData = jsonDecode(response.body);
 
-      accessToken = responseData['access'];
+      accessToken.value = responseData['access'];
       refreshToken = responseData['refresh'];
 
-      await FlutterSessionJwt.saveToken(accessToken);
+      update();
+
+      await FlutterSessionJwt.saveToken(accessToken.value);
+    } else {
+      error.value = response.statusCode.toString();
+    }
+  }
+
+  void refreshAccessToken() async {
+
+    var exp = await FlutterSessionJwt.isTokenExpired();
+
+    if (exp == true) {
+      var token = await http.post(
+        Uri.parse("${baseUrl}api/accounts/refresh/"),
+        headers: {'content-type': 'application/json'},
+        body: jsonEncode(
+          {
+            "refresh":refreshToken
+          }
+        )
+      );
+
+      if (token.statusCode==200) {
+        var newaccessToken = jsonDecode(token.body);
+        accessToken.value = newaccessToken['access'];
+
+        await FlutterSessionJwt.saveToken(accessToken.value);
+      }
     }
   }
 
   void getUserDetails(username) async {
 
-    var exp = await FlutterSessionJwt.isTokenExpired();
-
-    if (exp == true) {
-      
-    }
+    refreshAccessToken();
 
     final response  = await http.get(
       Uri.parse("${baseUrl}api/accounts/users/$username/"),
       headers: {
         'content-type': 'application/json',
-        'Authorization': accessToken,
+        'Authorization': accessToken.value,
       },
     );
 
@@ -84,5 +106,23 @@ class UserController extends GetxController {
       user.value = userFromJson(response.body);
       update();
     }
+  }
+
+  void logoutUser() async {
+    
+    refreshAccessToken();
+
+    final response = await http.get(
+      Uri.parse("${baseUrl}api/accounts/logout/"),
+      headers: {
+        'content-type': 'application/json',
+        'Authorization': accessToken.value,
+      }
+    );
+
+    if (response.statusCode == 200) {
+      var responseData = jsonDecode(response.body);
+    }
+
   }
 }

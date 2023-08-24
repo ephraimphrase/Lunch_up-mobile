@@ -163,7 +163,7 @@ class RegisterView extends StatelessWidget {
                     ),
                     const SizedBox(height: 20,),
                     GestureDetector(
-                      onTap: () => Get.to(const LoginView()),
+                      onTap: () => Get.to(LoginView()),
                       child: Align(
                         alignment: Alignment.center,
                         child: RichText(
