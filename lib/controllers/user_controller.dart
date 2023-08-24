@@ -10,7 +10,6 @@ class UserController extends GetxController {
   var accessToken = ''.obs;
   var refreshToken = '';
   var error = ''.obs;
-  var isAuthenticated = false.obs;
   var signUp = 'Sign Up'.obs;
   var signIn = 'Sign In'.obs;
 
@@ -61,8 +60,10 @@ class UserController extends GetxController {
       update();
 
       await FlutterSessionJwt.saveToken(accessToken.value);
-    } else {
-      error.value = response.statusCode.toString();
+    } else if (response.statusCode == 401) {
+      var responseData = jsonDecode(response.body);
+
+      error.value = responseData['detail'];
     }
   }
 
@@ -98,7 +99,7 @@ class UserController extends GetxController {
       Uri.parse("${baseUrl}api/accounts/users/$username/"),
       headers: {
         'content-type': 'application/json',
-        'Authorization': accessToken.value,
+        'Authorization': 'Bearer ${accessToken.value}',
       },
     );
 
@@ -116,12 +117,14 @@ class UserController extends GetxController {
       Uri.parse("${baseUrl}api/accounts/logout/"),
       headers: {
         'content-type': 'application/json',
-        'Authorization': accessToken.value,
+        'Authorization': 'Bearer ${accessToken.value}',
       }
     );
 
     if (response.statusCode == 200) {
       var responseData = jsonDecode(response.body);
+
+
     }
 
   }

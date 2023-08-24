@@ -85,6 +85,8 @@ class LoginView extends StatelessWidget {
       
                           if (userController.error.value == '') {
                             Get.to(DashboardView());
+                          } else {
+                            Get.snackbar('Error', userController.error.value, margin: const EdgeInsets.all(15));
                           }
                         },
                         child: AppText(userController.signIn.value, size: 24, fontWeight: FontWeight.w500, color: Colors.white,),
