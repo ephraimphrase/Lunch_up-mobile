@@ -7,4 +7,5 @@ class AppColors {
   static final Color overlay = convertRgboToColor(0, 0, 0, 0.31);
   static final Color overlay1 = convertRgboToColor(0, 0, 0, 0.4);
   static final Color primaryText = fromHex("#FFFFFF");
+  static final Color secondaryText = convertRgboToColor(0, 0, 0, 0.6);
 }

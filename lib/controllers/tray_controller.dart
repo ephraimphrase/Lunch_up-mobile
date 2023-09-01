@@ -12,6 +12,9 @@ class TrayController extends GetxController {
   final userController = Get.put(UserController());
   var message = ''.obs;
 
+  double get subTotal => trayItems.fold(0, (sum, item) => sum + int.parse(item.meal.amount)*item.quantity);
+  double get total => trayItems.fold(0, (previousValue, element) => previousValue + int.parse(element.meal.amount)*element.quantity + 100);
+
   void getTrayItems(username) async {
     
     userController.refreshAccessToken();
@@ -36,7 +39,7 @@ class TrayController extends GetxController {
     userController.refreshAccessToken();
 
     final response = await http.post(
-      Uri.parse("${baseUrl}api/trayItem/${meal.id}/"),
+      Uri.parse("${baseUrl}api/trayItem/$meal/"),
       headers: {
         'content-type': 'application/json',
         'Authorization': 'Bearer ${userController.accessToken.value}'
@@ -54,7 +57,7 @@ class TrayController extends GetxController {
     userController.refreshAccessToken();
 
     final response = await http.delete(
-      Uri.parse('${baseUrl}api/trayItem/${trayItem.id}/'),
+      Uri.parse('${baseUrl}api/trayItem/$trayItem/'),
       headers: {
         'content-type': 'application/json',
         'Authorization': 'Bearer ${userController.accessToken.value}'
@@ -62,10 +65,41 @@ class TrayController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      var responseData = jsonDecode(response.body);
-
-      message.value = responseData['message'];
+      trayItems.value = trayItemFromJson(response.body);
       update();
+    }
+  }
+
+  void subtractTrayItem(trayItem) async {
+    userController.refreshAccessToken();
+
+    final response = await http.post(
+      Uri.parse('${baseUrl}api/trayItem/$trayItem/subtract/'),
+      headers: {
+        'content-type': 'application/json',
+        'Authorization': 'Bearer ${userController.accessToken.value}'
+      },
+    );
+
+    if (response.statusCode == 200) {
+      trayItems.value = trayItemFromJson(response.body);
+      update();
+    }
+  }
+
+  void clearTray(tray) async {
+    userController.refreshAccessToken();
+
+    final response = await http.delete(
+      Uri.parse('${baseUrl}api/trayItem/$tray/subtract/'),
+      headers: {
+        'content-type': 'application/json',
+        'Authorization': 'Bearer ${userController.accessToken.value}'
+      },
+    );
+
+    if (response.statusCode==200) {
+      trayItems.value = trayItemFromJson(response.body);
     }
   }
 }
