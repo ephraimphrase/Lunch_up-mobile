@@ -123,8 +123,6 @@ class UserController extends GetxController {
 
     if (response.statusCode == 200) {
       var responseData = jsonDecode(response.body);
-
-
     }
 
   }

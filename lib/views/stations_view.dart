@@ -32,7 +32,7 @@ class StationsView extends StatelessWidget {
                 itemBuilder: ( (context, index) {
                   return GestureDetector(
                     onTap: () {
-                      mealController.getMeals(dashboardController.stations[index]);
+                      mealController.getMeals(dashboardController.stations[index].id);
                       mealController.choice = dashboardController.stations[index];
                       Get.to(MealView());
                     },
@@ -42,7 +42,7 @@ class StationsView extends StatelessWidget {
                       child: Stack(
                         children: [
                           Container(
-                            // decoration: BoxDecoration(image: DecorationImage(image: AssetImage(dashboardController.stations[index].coverArt), fit: BoxFit.fill)),
+                            decoration: const BoxDecoration(image: DecorationImage(image: AssetImage("assets/images/station.png"), fit: BoxFit.fill)),
                           ),
                           Container(
                             color: AppColors.overlay1,

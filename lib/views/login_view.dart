@@ -41,7 +41,7 @@ class LoginView extends StatelessWidget {
                             borderRadius: BorderRadius.circular(20)
                           ),
                           hintText: "Enter username",
-                          prefixIcon: const Icon(Icons.phone)
+                          prefixIcon: const Icon(Icons.account_circle_outlined)
                         ),
                       ),
                     ),
