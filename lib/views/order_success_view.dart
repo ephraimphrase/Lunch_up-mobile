@@ -17,14 +17,17 @@ class OrderSuccessView extends StatelessWidget {
      });
     return Scaffold(
       body: SafeArea(
-        child: Center(
+        child: SizedBox(
+          height: Get.height,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-               Column(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset(AppAsset.successIcon),
+                  Image.asset(AppAsset.successIcon)
                 ],
-              ) 
+              )
             ],
           ),
         )

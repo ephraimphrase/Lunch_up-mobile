@@ -37,7 +37,7 @@ class TrayController extends GetxController {
           dateJoined: DateTime(2023),
           groups: [],
           userPermissions: []),
-      trayItem: []).obs;
+      trayItem: <TrayItem>[]).obs;
 
   double get subTotal => trayItems.fold(0, (sum, item) => sum + int.parse(item.meal.amount)*item.quantity);
   double get total => trayItems.fold(0, (previousValue, element) => (previousValue + int.parse(element.meal.amount)*element.quantity) + 200);
@@ -57,6 +57,10 @@ class TrayController extends GetxController {
       trayItems.value = trayItemFromJson(response.body);
       update();
     }
+  }
+
+  void calculateTotal() {
+    
   }
 
   void addToTray(meal) async {
@@ -135,8 +139,6 @@ class TrayController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      clearTray(userController.user.value.username);
-      trayItems.clear();
       order.value = orderDetailFromJson(response.body);
       update();
     }

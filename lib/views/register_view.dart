@@ -150,7 +150,7 @@ class RegisterView extends StatelessWidget {
 
                             if (userController.error.value == '') {
                               Get.snackbar("Success", "User Succesfully created", margin: const EdgeInsets.all(15));
-                              Get.to(DashboardView());
+                              Get.off(DashboardView());
                             } else {
                               Get.snackbar("Error", userController.error.value, margin: const EdgeInsets.all(15));
                             }

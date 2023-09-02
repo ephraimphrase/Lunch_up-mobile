@@ -1,7 +1,4 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:lunch_up/components/assets/app_assets.dart';
 import 'package:lunch_up/components/assets/app_colors.dart';
@@ -21,11 +18,6 @@ class TrayView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      Timer.periodic(const Duration(minutes: 5), (timer) { 
-        userController.refreshAccessToken();
-      });
-    },);
     return Scaffold(
       appBar: AppBar(
         title: const AppText("Tray", size: 24, fontWeight: FontWeight.w500,),
@@ -42,13 +34,13 @@ class TrayView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     AppText(mealController.choice.name, size: 24, fontWeight: FontWeight.w400,),
-                    (trayController.trayItems.isNotEmpty) ? GestureDetector(
+                    Obx(() => (trayController.trayItems.isNotEmpty) ? GestureDetector(
                       onTap: () {
                         trayController.clearTray(userController.user.value.username);
                       },
                       child: AppText("Clear", size: 20, fontWeight: FontWeight.w400, color: AppColors.primaryColor,),
                     ) : Container()
-                  ],
+                  )],
                 ),
                 const SizedBox(height: 10,),
                 Row(
@@ -75,7 +67,7 @@ class TrayView extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 10,),
-            (trayController.trayItems.isNotEmpty) ? Expanded(
+            Obx(() => (trayController.trayItems.isNotEmpty) ? Expanded(
               child: Obx(() => ListView.separated(
                 itemBuilder: ((context, index) {
                   return Row(
@@ -171,14 +163,14 @@ class TrayView extends StatelessWidget {
                 AppText("any food on your tray", size: 18, fontWeight: FontWeight.w400, color: AppColors.secondaryText,),
                 const SizedBox(height: 38,)
               ],
-            ), 
-            Row(
+            )), 
+            Obx(() => Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 AppText("Subtotal:", size: 18, color: AppColors.secondaryText, fontWeight: FontWeight.w400,),
                 AppText('₦${trayController.subTotal}', size: 14, fontWeight: FontWeight.w400,)
               ],
-            ),
+            ),),
             const SizedBox(height: 10,),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -188,15 +180,15 @@ class TrayView extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 10,),
-            Row(
+            Obx(() => Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 AppText("Total:", size: 18, color: AppColors.secondaryText, fontWeight: FontWeight.w400,),
                 AppText('₦${trayController.total}', size: 14, fontWeight: FontWeight.w400,)
               ],
-            ),
+            ),),
             const SizedBox(height: 10,),
-            (trayController.trayItems.isNotEmpty) ? Align(
+            Obx(() => (trayController.trayItems.isNotEmpty) ? Align(
               alignment: Alignment.center,
               child: Material(
                 color: AppColors.primaryColor,
@@ -224,7 +216,7 @@ class TrayView extends StatelessWidget {
                   child: AppButton(child: AppText("Place Order", size: 24, fontWeight: FontWeight.w500, color: Colors.white,),),
                 ),
               ),
-            )
+            ))
           ],
         ),
       ),
