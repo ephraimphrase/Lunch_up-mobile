@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:lunch_up/components/assets/app_colors.dart';
 import 'package:lunch_up/components/widgets/app_text.dart';
 import 'package:lunch_up/controllers/dashboard_controller.dart';
 import 'package:lunch_up/controllers/meal_controller.dart';
+import 'package:lunch_up/controllers/user_controller.dart';
 import 'package:lunch_up/views/meal_view.dart';
 
 
@@ -12,9 +16,15 @@ class StationsView extends StatelessWidget {
 
   final dashboardController = Get.put(DashboardController());
   final mealController = Get.put(MealController());
+  final userController = Get.put(UserController());
 
   @override
   Widget build(BuildContext context) {
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      Timer.periodic(const Duration(minutes: 5), (timer) { 
+        userController.refreshAccessToken();
+      });
+    },);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,

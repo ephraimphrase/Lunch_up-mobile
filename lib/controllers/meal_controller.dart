@@ -14,24 +14,19 @@ class MealController extends GetxController {
   void getMeals(station) async{
     var baseUrl = 'http://10.0.2.2:8000/';
 
-    try {
-      userController.refreshAccessToken();
-    } finally {
-      final response = await http.get(
-        Uri.parse('${baseUrl}api/$station/meals/'),
-        headers: {
-          'content-type': 'application/json',
-          'Authorization': 'Bearer ${userController.accessToken.value}'
-        },
-      );
+    final response = await http.get(
+      Uri.parse('${baseUrl}api/$station/meals/'),
+      headers: {
+        'content-type': 'application/json',
+        'Authorization': 'Bearer ${userController.accessToken.value}'
+      },
+    );
 
-      if (response.statusCode == 200) {
-        var meal = mealFromJson(response.body);
-        meals.value = meal;
+    if (response.statusCode == 200) {
+      var meal = mealFromJson(response.body);
+      meals.value = meal;
 
-        update();
-      } 
+      update();
     }
-
   }
 }

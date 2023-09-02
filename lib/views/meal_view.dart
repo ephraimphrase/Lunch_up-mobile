@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:lunch_up/components/assets/app_assets.dart';
 import 'package:lunch_up/components/widgets/app_text.dart';
@@ -16,6 +19,11 @@ class MealView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      Timer.periodic(const Duration(minutes: 5), (timer) { 
+        userController.refreshAccessToken();
+      });
+    },);
     return Scaffold(
       appBar: AppBar(
         title: AppText(mealController.choice.name, size: 24, fontWeight: FontWeight.w500, color: Colors.black,),

@@ -1,11 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:lunch_up/components/assets/app_assets.dart';
 import 'package:lunch_up/components/assets/app_colors.dart';
+import 'package:lunch_up/components/widgets/app_button.dart';
 import 'package:lunch_up/components/widgets/app_text.dart';
 import 'package:lunch_up/controllers/meal_controller.dart';
 import 'package:lunch_up/controllers/tray_controller.dart';
 import 'package:lunch_up/controllers/user_controller.dart';
+import 'package:lunch_up/views/order_success_view.dart';
 
 class TrayView extends StatelessWidget {
   TrayView({super.key});
@@ -16,6 +21,11 @@ class TrayView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      Timer.periodic(const Duration(minutes: 5), (timer) { 
+        userController.refreshAccessToken();
+      });
+    },);
     return Scaffold(
       appBar: AppBar(
         title: const AppText("Tray", size: 24, fontWeight: FontWeight.w500,),
@@ -32,10 +42,12 @@ class TrayView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     AppText(mealController.choice.name, size: 24, fontWeight: FontWeight.w400,),
-                    GestureDetector(
-                      onTap: () {},
+                    (trayController.trayItems.isNotEmpty) ? GestureDetector(
+                      onTap: () {
+                        trayController.clearTray(userController.user.value.username);
+                      },
                       child: AppText("Clear", size: 20, fontWeight: FontWeight.w400, color: AppColors.primaryColor,),
-                    )
+                    ) : Container()
                   ],
                 ),
                 const SizedBox(height: 10,),
@@ -157,7 +169,7 @@ class TrayView extends StatelessWidget {
                 const Image(image: AssetImage(AppAsset.emptyTray)),
                 AppText("Sorry, It seems you don’t have", size: 18, fontWeight: FontWeight.w400, color: AppColors.secondaryText,),
                 AppText("any food on your tray", size: 18, fontWeight: FontWeight.w400, color: AppColors.secondaryText,),
-                const SizedBox(height: 50,)
+                const SizedBox(height: 38,)
               ],
             ), 
             Row(
@@ -183,6 +195,36 @@ class TrayView extends StatelessWidget {
                 AppText('₦${trayController.total}', size: 14, fontWeight: FontWeight.w400,)
               ],
             ),
+            const SizedBox(height: 10,),
+            (trayController.trayItems.isNotEmpty) ? Align(
+              alignment: Alignment.center,
+              child: Material(
+                color: AppColors.primaryColor,
+                borderRadius: BorderRadius.circular(20),
+                child: SizedBox(
+                  height: 63,
+                  width: 336,
+                  child: AppButton(
+                    child: const AppText("Place Order", size: 24, fontWeight: FontWeight.w500, color: Colors.white,),
+                    onPressed: (){
+                      trayController.placeOrder(mealController.choice.id);
+                      Get.to(OrderSuccessView());
+                    }
+                  ),
+                ),
+              ),
+            ) : Align(
+              alignment: Alignment.center,
+              child: Material(
+                color: Colors.grey,
+                borderRadius: BorderRadius.circular(20),
+                child: const SizedBox(
+                  height: 63,
+                  width: 336,
+                  child: AppButton(child: AppText("Place Order", size: 24, fontWeight: FontWeight.w500, color: Colors.white,),),
+                ),
+              ),
+            )
           ],
         ),
       ),
